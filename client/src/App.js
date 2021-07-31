@@ -10,6 +10,9 @@ import CourseDetail from './components/courseDetail';
 import UserSignIn from './components/userSignIn';
 import UserSignUp from './components/userSignUp';
 import UserSignOut from "./components/userSignOut";
+import NotFound from "./components/notFound";
+import Forbidden from "./components/forbidden";
+import UnhandledError from "./components/unhandledError";
 
 function App() {
 
@@ -30,6 +33,11 @@ function App() {
                         <Route exact path="/signin" component={UserSignIn} />
                         <Route exact path="/signup" component={UserSignUp} />
                         <Route exact path="/signout" component={UserSignOut} />
+
+                        <Route exact path="/notfound" component={NotFound} />
+                        <Route exact path="/forbidden" component={Forbidden} />
+                        <Route exact path="/error" component={UnhandledError} />
+                        <Route component={NotFound}/>
                     </Switch>
             </Router>
         </div>
