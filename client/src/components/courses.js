@@ -5,11 +5,9 @@ import axios from "axios";
 export default function Courses() {
 
         const [data, setData] = useState([]);
-
         useEffect(()=>{
             axios.get('http://localhost:5000/api/courses')
                 .then(response => {
-                    console.log(response.data);
                     setData(response.data);
                 })
         }, [])
@@ -17,8 +15,8 @@ export default function Courses() {
         return(
             <main>
                 <div className="wrap main--grid">
-                    {data.map((course, index) =>(
-                        <Link className="course--module course--link" to={"/courses/"+index} key={index}>
+                    {data.map((course) =>(
+                        <Link className="course--module course--link" to={"/courses/"+course.id} key={course.id}>
                             <h2 className="course--label">Course</h2>
                             <h3 className="course--title">{course.title}</h3>
                         </Link>
