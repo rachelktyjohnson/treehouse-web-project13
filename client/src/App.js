@@ -1,5 +1,4 @@
 import './App.css';
-import axios from 'axios';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import Header from './components/header';
@@ -15,11 +14,6 @@ import Forbidden from "./components/forbidden";
 import UnhandledError from "./components/unhandledError";
 
 function App() {
-
-    axios.get('http://localhost:5000/api/courses')
-        .then(response => {
-            console.log(response.data);
-        })
 
     return (
         <div id="root">
