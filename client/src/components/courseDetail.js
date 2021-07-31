@@ -32,9 +32,8 @@ export default function CourseDetail(){
             <main>
                 <div className="actions--bar">
                     <div className="wrap">
-                        {/* TODO: update links */}
-                        <Link className="button" to="/">Update Course</Link>
-                        <Link className="button" to="/">Delete Course</Link>
+                        <Link className="button" to={'/courses/'+data.id+'/update'}>Update Course</Link>
+                        <Link className="button" to={'/courses/'+data.id+'/delete'}>Delete Course</Link>
                         <Link className="button button-secondary" to="/">Return to List</Link>
                     </div>
                 </div>
