@@ -114,7 +114,7 @@ router.delete('/courses/:id', authenticateUser, asyncHandler(async (req,res,)=>{
     const user = req.currentUser;
     if (course.userId !== user.id){
         res.status(403).json({
-            error: "User is nt the owner of the course"
+            error: "User is not the owner of the course"
         })
     } else {
         await course.destroy();

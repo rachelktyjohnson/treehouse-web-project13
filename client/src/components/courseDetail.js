@@ -1,14 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import axios from "axios";
 import Loading from './loading';
 
 export default function CourseDetail(){
 
     let {id} = useParams();
+    let history = useHistory();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [materialsArray, setMaterialsArray] = useState([]);
+
+    function handleDelete(e){
+        setIsLoading(true);
+        e.preventDefault();
+        axios.delete(`http://localhost:5000/api/courses/${id}`)
+            .then( () => setIsLoading(false))
+            .catch(error => {
+                console.log('Error fetching and parsing data', error);
+                if (error.response.status===401){
+                    history.push('/forbidden');
+                } else {
+                    history.push('/error');
+                }
+            })
+            .then((response) => {
+                setIsLoading(false);
+                history.push('/');
+            })
+            .catch(error => {
+                setIsLoading(false);
+                console.log('Error fetching and parsing data', error);
+                if (error.response.status===401){
+                    history.push('/forbidden');
+                }
+            })
+    }
 
     useEffect(()=>{
         axios.get(`http://localhost:5000/api/courses/${id}`)
@@ -32,7 +59,7 @@ export default function CourseDetail(){
                 <div className="actions--bar">
                     <div className="wrap">
                         <Link className="button" to={'/courses/'+data.id+'/update'}>Update Course</Link>
-                        <Link className="button" to={'/courses/'+data.id+'/delete'}>Delete Course</Link>
+                        <Link className="button" onClick={handleDelete}>Delete Course</Link>
                         <Link className="button button-secondary" to="/">Return to List</Link>
                     </div>
                 </div>
