@@ -13,7 +13,6 @@ export default function CourseDetail(){
     useEffect(()=>{
         axios.get(`http://localhost:5000/api/courses/${id}`)
             .then(response => {
-                console.log(response.data);
                 setData(response.data);
                 let materials = response.data.materialsNeeded.split('*');
                 materials.shift();

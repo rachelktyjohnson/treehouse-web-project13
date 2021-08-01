@@ -108,6 +108,7 @@ router.put('/courses/:id', authenticateUser, asyncHandler( async (req,res) => {
 
 }))
 
+//TODO: put authenticateUser back in
 router.delete('/courses/:id', authenticateUser, asyncHandler(async (req,res,)=>{
     let course = await Course.findByPk(req.params.id);
     const user = req.currentUser;

@@ -20,7 +20,7 @@ export default function DeleteCourse(){
                     history.push('/error');
                 }
             })
-    }, [id])
+    }, [id, history])
 
     if (isLoading){
         return (
