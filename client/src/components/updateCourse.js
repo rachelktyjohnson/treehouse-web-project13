@@ -24,14 +24,14 @@ export default function UpdateCourse() {
             materials: materials
         })
             .then(()=>{
-                setIsLoading(false);
                 history.push('/courses/'+id)
             })
             .catch(error => {
-                setIsLoading(false);
                 console.log('Error fetching and parsing data', error);
                 if (error.response.status===401){
                     history.push('/forbidden');
+                } else if (error.response.status===500){
+                    history.push('/error');
                 } else {
                     setErrors(error.response.data.errors);
                 }
