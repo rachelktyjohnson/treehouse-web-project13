@@ -1,39 +1,30 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import Cookies from 'js-cookie';
 
 const UserContext = React.createContext();
 
-export class Provider extends React.Component {
 
-    state = {
-        authenticatedUser: Cookies.get('authenticatedUser') || null,
-        password: Cookies.get('password') || null
-    }
+export function Provider(props) {
 
-    constructor() {
-        super();
-    }
+    const [authenticatedUser, setAuthenticatedUser] = useState(Cookies.get('authenticatedUser') || null);
+    const [password, setPassword] = useState(Cookies.get('password') || null);
 
-    render() {
-        const { authenticatedUser } = this.state;
-        const { password } = this.state;
-        const value = {
-            authenticatedUser,
-            password,
-            actions: {
-                signIn: this.signIn,
-                signOut: this.signOut
-            },
-        };
-        return (
-            <UserContext.Provider value={value}>
-                {this.props.children}
-            </UserContext.Provider>
-        );
-    }
+    const value = {
+        authenticatedUser,
+        password,
+        actions: {
+            signIn,
+            signOut
+        },
+    };
+    return (
+        <UserContext.Provider value={value}>
+            {props.children}
+        </UserContext.Provider>
+    );
 
-    signIn = (emailAddress, password) => {
+    function signIn (emailAddress, password) {
         const token = Buffer.from(`${emailAddress}:${password}`, 'utf8').toString('base64')
         axios.get("http://localhost:5000/api/users", {
             headers: {
@@ -42,15 +33,11 @@ export class Provider extends React.Component {
         })
             .then((response) => {
                 console.log(response.data);
-                this.setState(() => {
-                    return {authenticatedUser: response.data}
-                })
-                Cookies.set('authenticatedUser', JSON.stringify(response.data), {expires: 1})
+                setAuthenticatedUser(response.data);
+                Cookies.set('authenticatedUser', JSON.stringify(response.data), {expires: 1, sameSite: 'strict'})
 
-                this.setState(() => {
-                    return {password: password}
-                })
-                Cookies.set('password', JSON.stringify(password), {expires: 1})
+                setPassword(password);
+                Cookies.set('password', JSON.stringify(password), {expires: 1, sameSite: 'strict'})
                 return response.data;
             })
             .catch((error) => {
@@ -58,16 +45,13 @@ export class Provider extends React.Component {
             })
     }
 
-    signOut = () => {
-        this.setState(() => {
-            return {authenticatedUser: null}
-        })
-        Cookies.remove('authenticatedUser');
+    function signOut(history){
+        setAuthenticatedUser(null);
+        Cookies.remove('authenticatedUser', {sameSite: 'strict'});
 
-        this.setState(() => {
-            return {password: null}
-        })
-        Cookies.remove('password');
+        setPassword(null);
+        Cookies.remove('password', {sameSite: 'strict'});
+
     }
 }
 

@@ -1,11 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function Header(props) {
-
-    const {context} = props;
-    if(context.authenticatedUser){
-
-    }
+export default function Header({context}) {
 
     return (
         <header>

@@ -3,9 +3,15 @@ import {Link, useHistory} from 'react-router-dom';
 import Loading from "./loading";
 import axios from 'axios';
 
-export default function UserSignUp() {
+export default function UserSignUp(props) {
 
+    const {context} = props;
     let history = useHistory();
+
+    //redirect if already logged in
+    if(context.authenticatedUser){
+        history.push('/');
+    }
 
     const [errors, setErrors] = useState([]);
     const [firstName, setFirstName] = useState('');

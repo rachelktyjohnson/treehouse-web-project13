@@ -3,7 +3,7 @@ import {Link, useParams, useHistory} from 'react-router-dom';
 import axios from "axios";
 import Loading from './loading';
 
-export default function UpdateCourse() {
+export default function UpdateCourse({context}) {
 
     let {id} = useParams();
     let history = useHistory();
@@ -45,6 +45,9 @@ export default function UpdateCourse() {
                 if (response.data == null){
                     history.push('/notfound');
                 }
+                if(response.data.userId !== context.authenticatedUser.id){
+                    history.push('/forbidden');
+                }
                 setTitle(response.data.title);
                 setDescription(response.data.description);
                 setTime(response.data.estimatedTime || "");
@@ -59,7 +62,7 @@ export default function UpdateCourse() {
                 }
             })
             .finally(()=>setIsLoading(false));
-    }, [id, history])
+    }, [id, history, context.authenticatedUser.id])
 
     if (isLoading){
         return (<Loading/>)
