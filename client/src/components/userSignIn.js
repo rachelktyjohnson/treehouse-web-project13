@@ -21,7 +21,7 @@ export default function UserSignIn(props) {
                 history.push('/');
             }
         }
-    },[context.authenticatedUser])
+    },[history, props.location.state, context.authenticatedUser])
 
     return(
         <main>
