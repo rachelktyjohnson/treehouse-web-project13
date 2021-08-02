@@ -5,17 +5,22 @@ import ReactMarkdown from "react-markdown";
 
 import Loading from './loading';
 
-export default function CourseDetail(){
+export default function CourseDetail({context}){
 
     let {id} = useParams();
     let history = useHistory();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isUser, setIsUser] = useState(false);
 
     function handleDelete(e){
         setIsLoading(true);
-        e.preventDefault();
-        axios.delete(`http://localhost:5000/api/courses/${id}`)
+        e.preventDefault();const token = Buffer.from(`${context.authenticatedUser.emailAddress}:${context.password}`, 'utf8').toString('base64')
+
+        axios.delete(`http://localhost:5000/api/courses/${id}`,{
+            headers: {
+                'Authorization': `Basic ${token}`
+            }})
             .then( () => {
                 setIsLoading(false)
                 history.push('/');
@@ -38,6 +43,10 @@ export default function CourseDetail(){
                     history.push('/notfound');
                 }
                 setData(response.data);
+                if (context.authenticatedUser !== null){
+                    setIsUser(response.data.userId === context.authenticatedUser.id)
+                }
+
             })
             .catch(error => {
                 console.log('Error fetching and parsing data', error)
@@ -59,8 +68,12 @@ export default function CourseDetail(){
             <main>
                 <div className="actions--bar">
                     <div className="wrap">
-                        <Link className="button" to={'/courses/'+data.id+'/update'}>Update Course</Link>
-                        <button className="button" onClick={handleDelete}>Delete Course</button>
+                        {isUser ? (
+                            <>
+                                <Link className="button" to={"/courses/"+data.id+"/update"}>Update Course</Link>
+                                <button className="button" onClick={handleDelete}>Delete Course</button>
+                            </>
+                            ) : ""}
                         <Link className="button button-secondary" to="/">Return to List</Link>
                     </div>
                 </div>

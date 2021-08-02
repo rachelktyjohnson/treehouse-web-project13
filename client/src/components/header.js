@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 export default function Header({context}) {
 
+
     return (
         <header>
             <div className="wrap header--flex">
@@ -10,7 +11,7 @@ export default function Header({context}) {
 
                     {context.authenticatedUser ? (
                         <ul className="header--signedin">
-                            <li>Welcome, Joe Smith!</li>
+                            <li>Welcome, {context.authenticatedUser.firstName} {context.authenticatedUser.lastName}!</li>
                             <li><Link to="/signout">Sign Out</Link></li>
                         </ul>
                     ) : (

@@ -7,7 +7,8 @@ const UserContext = React.createContext();
 
 export function Provider(props) {
 
-    const [authenticatedUser, setAuthenticatedUser] = useState(Cookies.get('authenticatedUser') || null);
+
+    const [authenticatedUser, setAuthenticatedUser] = useState(JSON.parse(Cookies.get('authenticatedUser') || null));
     const [password, setPassword] = useState(Cookies.get('password') || null);
 
     const value = {
@@ -32,7 +33,6 @@ export function Provider(props) {
             }
         })
             .then((response) => {
-                console.log(response.data);
                 setAuthenticatedUser(response.data);
                 Cookies.set('authenticatedUser', JSON.stringify(response.data), {expires: 1, sameSite: 'strict'})
 

@@ -17,16 +17,23 @@ export default function UpdateCourse({context}) {
     function handleUpdate(e){
         setIsLoading(true);
         e.preventDefault();
+        const token = Buffer.from(`${context.authenticatedUser.emailAddress}:${context.password}`, 'utf8').toString('base64')
         axios.put(`http://localhost:5000/api/courses/${id}`,{
             title: title,
             description: description,
             time: time,
-            materials: materials
+            materials: materials,
+            userId: context.authenticatedUser.id,
+        }, {
+            headers: {
+                'Authorization': `Basic ${token}`
+            }
         })
             .then(()=>{
                 history.push('/courses/'+id)
             })
-            .catch(error => {
+            .catch((error) => {
+                setIsLoading(false);
                 console.log('Error fetching and parsing data', error);
                 if (error.response.status===401){
                     history.push('/forbidden');

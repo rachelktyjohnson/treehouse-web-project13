@@ -16,6 +16,7 @@ import Forbidden from "./components/forbidden";
 import UnhandledError from "./components/unhandledError";
 
 import withContext from './Context';
+import PrivateRoute from './PrivateRoute';
 
 const HeaderWithContext = withContext(Header);
 
@@ -26,8 +27,8 @@ function App() {
                 <HeaderWithContext/>
                 <Switch>
                     <Route exact path="/" component={withContext(Courses)} />
-                    <Route exact path="/courses/create" component={withContext(CreateCourse)} />
-                    <Route exact path="/courses/:id/update" component={withContext(UpdateCourse)} />
+                    <PrivateRoute exact path="/courses/create" component={withContext(CreateCourse)} />
+                    <PrivateRoute exact path="/courses/:id/update" component={withContext(UpdateCourse)} />
                     <Route exact path="/courses/:id" component={withContext(CourseDetail)} />
                     <Route exact path="/signin" component={withContext(UserSignIn)} />
                     <Route exact path="/signup" component={withContext(UserSignUp)} />
@@ -36,7 +37,7 @@ function App() {
                     <Route exact path="/notfound" component={withContext(NotFound)} />
                     <Route exact path="/forbidden" component={withContext(Forbidden)} />
                     <Route exact path="/error" component={withContext(UnhandledError)} />
-                    <Route component={NotFound}/>
+                    <Route component={withContext(NotFound)}/>
                 </Switch>
             </Router>
         </div>

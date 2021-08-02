@@ -4,7 +4,7 @@ import axios from "axios";
 
 import Loading from './loading';
 
-export default function CreateCourse () {
+export default function CreateCourse ({context}) {
 
     let history = useHistory();
 
@@ -13,7 +13,7 @@ export default function CreateCourse () {
     const [description, setDescription] = useState('');
     const [time, setTime] = useState('');
     const [materials, setMaterials] = useState('');
-    const[isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
 
 
@@ -21,12 +21,17 @@ export default function CreateCourse () {
     function handleSubmit(e){
         setIsLoading(true);
         e.preventDefault();
+        const token = Buffer.from(`${context.authenticatedUser.emailAddress}:${context.password}`, 'utf8').toString('base64')
         axios.post(`http://localhost:5000/api/courses`,{
             title: title,
             description: description,
             estimatedTime: time,
             materialsNeeded: materials,
-            userId: 1
+            userId: context.authenticatedUser.id,
+        }, {
+            headers: {
+                'Authorization': `Basic ${token}`
+            }
         })
             .then((response) => {
                 setIsLoading(false);
@@ -75,7 +80,7 @@ export default function CreateCourse () {
                                        onChange={(e) => setTitle(e.target.value)}
                                 />
 
-                                <p>By Joe Smith</p>
+                                <p>By {context.authenticatedUser.firstName} {context.authenticatedUser.lastName}</p>
 
                                 <label htmlFor="courseDescription">Course Description</label>
                                 <textarea id="courseDescription"
