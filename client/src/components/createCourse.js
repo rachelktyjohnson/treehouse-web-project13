@@ -80,6 +80,7 @@ export default function CreateCourse () {
                                 <label htmlFor="courseDescription">Course Description</label>
                                 <textarea id="courseDescription"
                                           name="courseDescription"
+                                          placeholder="Markdown is supported!"
                                           onChange={(e) => setDescription(e.target.value)}
                                 />
                             </div>
@@ -96,7 +97,7 @@ export default function CreateCourse () {
                                 <textarea
                                     id="materialsNeeded"
                                     name="materialsNeeded"
-                                    placeholder="Start new material with a *"
+                                    placeholder="Markdown is supported!"
                                     onChange={(e) => setMaterials(e.target.value)}
                                 />
                             </div>

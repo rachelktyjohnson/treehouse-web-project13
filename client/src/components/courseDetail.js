@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useHistory } from 'react-router-dom';
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+
 import Loading from './loading';
 
 export default function CourseDetail(){
@@ -9,7 +11,6 @@ export default function CourseDetail(){
     let history = useHistory();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [materialsArray, setMaterialsArray] = useState([]);
 
     function handleDelete(e){
         setIsLoading(true);
@@ -37,13 +38,6 @@ export default function CourseDetail(){
                     history.push('/notfound');
                 }
                 setData(response.data);
-                if (response.data.materialsNeeded == null){
-                    setMaterialsArray([])
-                } else {
-                    let materials = response.data.materialsNeeded.split('*');
-                    materials.shift();
-                    setMaterialsArray(materials);
-                }
             })
             .catch(error => {
                 console.log('Error fetching and parsing data', error)
@@ -80,7 +74,7 @@ export default function CourseDetail(){
                                 <h4 className="course--name">{data.title}</h4>
                                 <p>By {data.teacher.firstName} {data.teacher.lastName}</p>
 
-                                <p>{data.description}</p>
+                                <ReactMarkdown>{data.description}</ReactMarkdown>
                             </div>
                             <div>
                                 <h3 className="course--detail--title">Estimated Time</h3>
@@ -88,9 +82,7 @@ export default function CourseDetail(){
 
                                 <h3 className="course--detail--title">Materials Needed</h3>
                                 <ul className="course--detail--list">
-                                    {materialsArray.map((material, index)=>(
-                                        <li key={index}>{material}</li>
-                                    ))}
+                                    <ReactMarkdown>{data.materialsNeeded}</ReactMarkdown>
                                 </ul>
                             </div>
                         </div>
@@ -100,3 +92,4 @@ export default function CourseDetail(){
         )
     }
 }
+
