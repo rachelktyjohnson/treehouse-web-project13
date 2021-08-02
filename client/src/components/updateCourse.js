@@ -42,14 +42,24 @@ export default function UpdateCourse() {
     useEffect(()=>{
         axios.get(`http://localhost:5000/api/courses/${id}`)
             .then(response => {
+                if (response.data == null){
+                    history.push('/notfound');
+                }
                 setTitle(response.data.title);
                 setDescription(response.data.description);
                 setTime(response.data.estimatedTime || "");
                 setMaterials(response.data.materialsNeeded || "");
             })
-            .catch(error => console.log('Error fetching and parsing data', error))
+            .catch(error => {
+                console.log('Error fetching and parsing data', error)
+                if (error.response.status===401){
+                    history.push('/forbidden');
+                } else if (error.response.status===500){
+                    history.push('/error');
+                }
+            })
             .finally(()=>setIsLoading(false));
-    }, [id])
+    }, [id, history])
 
     if (isLoading){
         return (<Loading/>)

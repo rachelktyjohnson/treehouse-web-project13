@@ -15,30 +15,27 @@ export default function CourseDetail(){
         setIsLoading(true);
         e.preventDefault();
         axios.delete(`http://localhost:5000/api/courses/${id}`)
-            .then( () => setIsLoading(false))
+            .then( () => {
+                setIsLoading(false)
+                history.push('/');
+            } )
             .catch(error => {
                 console.log('Error fetching and parsing data', error);
                 if (error.response.status===401){
                     history.push('/forbidden');
-                } else {
+                } else if (error.response.status===500){
                     history.push('/error');
                 }
             })
-            .then((response) => {
-                setIsLoading(false);
-                history.push('/');
-            })
-            .catch(error => {
-                console.log('Error fetching and parsing data', error);
-                if (error.response.status===401){
-                    history.push('/forbidden');
-                }
-            })
+
     }
 
     useEffect(()=>{
         axios.get(`http://localhost:5000/api/courses/${id}`)
             .then(response => {
+                if (response.data == null){
+                    history.push('/notfound');
+                }
                 setData(response.data);
                 if (response.data.materialsNeeded == null){
                     setMaterialsArray([])
@@ -48,9 +45,16 @@ export default function CourseDetail(){
                     setMaterialsArray(materials);
                 }
             })
-            .catch(error => console.log('Error fetching and parsing data', error))
+            .catch(error => {
+                console.log('Error fetching and parsing data', error)
+                if (error.response.status===401){
+                    history.push('/forbidden');
+                } else if (error.response.status===500){
+                    history.push('/error');
+                }
+            })
             .finally(()=>setIsLoading(false));
-    }, [id])
+    }, [id, history])
 
     if (isLoading){
         return (
