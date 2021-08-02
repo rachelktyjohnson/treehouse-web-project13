@@ -21,6 +21,7 @@ import PrivateRoute from './PrivateRoute';
 const HeaderWithContext = withContext(Header);
 
 function App() {
+
     return (
         <div id="root">
             <Router>

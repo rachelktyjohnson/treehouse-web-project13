@@ -57,7 +57,7 @@ export default function CourseDetail({context}){
                 }
             })
             .finally(()=>setIsLoading(false));
-    }, [id, history])
+    }, [id, history, context.authenticatedUser])
 
     if (isLoading){
         return (

@@ -1,21 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 
-export default function UserSignIn({context}) {
+export default function UserSignIn(props) {
 
+    let context = props.context;
     let history = useHistory();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    //redirect if already logged in
-    if(context.authenticatedUser){
-        history.push('/');
-    }
     async function handleSubmit(e){
         e.preventDefault();
         await context.actions.signIn(email, password);
-        history.push('/');
     }
+
+    useEffect(()=>{
+        if (context.authenticatedUser){
+            if (props.location.state){
+                history.push(props.location.state.from.pathname);
+            } else {
+                history.push('/');
+            }
+        }
+    },[context.authenticatedUser])
 
     return(
         <main>
