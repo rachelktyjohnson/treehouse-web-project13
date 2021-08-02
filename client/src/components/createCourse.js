@@ -42,6 +42,7 @@ export default function CreateCourse () {
                 }
             })
     }
+
     if (isLoading){
         return (
             <Loading/>
