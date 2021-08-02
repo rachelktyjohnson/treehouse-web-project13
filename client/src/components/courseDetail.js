@@ -29,7 +29,6 @@ export default function CourseDetail(){
                 history.push('/');
             })
             .catch(error => {
-                setIsLoading(false);
                 console.log('Error fetching and parsing data', error);
                 if (error.response.status===401){
                     history.push('/forbidden');
@@ -41,9 +40,13 @@ export default function CourseDetail(){
         axios.get(`http://localhost:5000/api/courses/${id}`)
             .then(response => {
                 setData(response.data);
-                let materials = response.data.materialsNeeded.split('*');
-                materials.shift();
-                setMaterialsArray(materials);
+                if (response.data.materialsNeeded == null){
+                    setMaterialsArray([])
+                } else {
+                    let materials = response.data.materialsNeeded.split('*');
+                    materials.shift();
+                    setMaterialsArray(materials);
+                }
             })
             .catch(error => console.log('Error fetching and parsing data', error))
             .finally(()=>setIsLoading(false));
@@ -59,7 +62,7 @@ export default function CourseDetail(){
                 <div className="actions--bar">
                     <div className="wrap">
                         <Link className="button" to={'/courses/'+data.id+'/update'}>Update Course</Link>
-                        <Link className="button" onClick={handleDelete}>Delete Course</Link>
+                        <button className="button" onClick={handleDelete}>Delete Course</button>
                         <Link className="button button-secondary" to="/">Return to List</Link>
                     </div>
                 </div>

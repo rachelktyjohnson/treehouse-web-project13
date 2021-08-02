@@ -1,37 +1,113 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link, useParams, useHistory} from 'react-router-dom';
+import axios from "axios";
+import Loading from './loading';
 
-export default class UpdateCourse extends React.Component {
-    render() {
+export default function UpdateCourse() {
+
+    let {id} = useParams();
+    let history = useHistory();
+    const [errors, setErrors] = useState([]);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [time, setTime] = useState('');
+    const [materials, setMaterials] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    function handleUpdate(e){
+        setIsLoading(true);
+        e.preventDefault();
+        axios.put(`http://localhost:5000/api/courses/${id}`,{
+            title: title,
+            description: description,
+            time: time,
+            materials: materials
+        })
+            .then(()=>{
+                setIsLoading(false);
+                history.push('/courses/'+id)
+            })
+            .catch(error => {
+                setIsLoading(false);
+                console.log('Error fetching and parsing data', error);
+                if (error.response.status===401){
+                    history.push('/forbidden');
+                } else {
+                    setErrors(error.response.data.errors);
+                }
+            })
+    }
+
+
+    useEffect(()=>{
+        axios.get(`http://localhost:5000/api/courses/${id}`)
+            .then(response => {
+                setTitle(response.data.title);
+                setDescription(response.data.description);
+                setTime(response.data.estimatedTime || "");
+                setMaterials(response.data.materialsNeeded || "");
+            })
+            .catch(error => console.log('Error fetching and parsing data', error))
+            .finally(()=>setIsLoading(false));
+    }, [id])
+
+    if (isLoading){
+        return (<Loading/>)
+    } else {
         return(
             <main>
                 <div className="wrap">
                     <h2>Update Course</h2>
+                    {errors.length > 0 ? (
+                        <div className="validation--errors">
+                            <h3>Validation Errors</h3>
+                            <ul>
+                                {errors.map((error, index) => (
+                                    <li key={index}>{error}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    ) : ""}
                     <form>
                         <div className="main--flex">
                             <div>
                                 <label htmlFor="courseTitle">Course Title</label>
-                                <input id="courseTitle" name="courseTitle" type="text" value="Build a Basic Bookcase"/>
+                                <input id="courseTitle"
+                                       name="courseTitle"
+                                       type="text"
+                                       value={title}
+                                       onChange={(e) => setTitle(e.target.value)}
+                                />
 
                                 <p>By Joe Smith</p>
 
                                 <label htmlFor="courseDescription">Course Description</label>
-                                <textarea id="courseDescription" name="courseDescription">
-                                    High-end furniture projects are great to dream about. But unless you have a well-equipped shop and some serious woodworking experience to draw on, it can be difficult to turn the dream into a reality.&#13;&#13;Not every piece of furniture needs to be a museum showpiece, though. Often a simple design does the job just as well and the experience gained in completing it goes a long way toward making the next project even better.&#13;&#13;Our pine bookcase, for example, features simple construction and it's designed to be built with basic woodworking tools. Yet, the finished project is a worthy and useful addition to any room of the house. While it's meant to rest on the floor, you can convert the bookcase to a wall-mounted storage unit by leaving off the baseboard. You can secure the cabinet to the wall by screwing through the cabinet cleats into the wall studs.&#13;&#13;We made the case out of materials available at most building-supply dealers and lumberyards, including 1/2 x 3/4-in. parting strip, 1 x 2, 1 x 4 and 1 x 10 common pine and 1/4-in.-thick lauan plywood. Assembly is quick and easy with glue and nails, and when you're done with construction you have the option of a painted or clear finish.&#13;&#13;As for basic tools, you'll need a portable circular saw, hammer, block plane, combination square, tape measure, metal rule, two clamps, nail set and putty knife. Other supplies include glue, nails, sandpaper, wood filler and varnish or paint and shellac.&#13;&#13;The specifications that follow will produce a bookcase with overall dimensions of 10 3/4 in. deep x 34 in. wide x 48 in. tall. While the depth of the case is directly tied to the 1 x 10 stock, you can vary the height, width and shelf spacing to suit your needs. Keep in mind, though, that extending the width of the cabinet may require the addition of central shelf supports.
-                                </textarea>
+                                <textarea id="courseDescription"
+                                          name="courseDescription"
+                                          value={description}
+                                          onChange={(e) => setDescription(e.target.value)}
+                                />
                             </div>
                             <div>
                                 <label htmlFor="estimatedTime">Estimated Time</label>
-                                <input id="estimatedTime" name="estimatedTime" type="text" value="14 hours"/>
+                                <input id="estimatedTime"
+                                       name="estimatedTime"
+                                       type="text"
+                                       value={time}
+                                       onChange={(e) => setTime(e.target.value)}
+                                />
 
                                 <label htmlFor="materialsNeeded">Materials Needed</label>
-                                <textarea id="materialsNeeded" name="materialsNeeded">
-                                    * 1/2 x 3/4 inch parting strip&#13;&#13;* 1 x 2 common pine&#13;&#13;* 1 x 4 common pine&#13;&#13;* 1 x 10 common pine&#13;&#13;* 1/4 inch thick lauan plywood&#13;&#13;* Finishing Nails&#13;&#13;* Sandpaper&#13;&#13;* Wood Glue&#13;&#13;* Wood Filler&#13;&#13;* Min-wax Oil Based Polyurethane
-                                </textarea>
+                                <textarea
+                                    id="materialsNeeded"
+                                    name="materialsNeeded"
+                                    value={materials}
+                                    onChange={(e) => setMaterials(e.target.value)}
+                                />
                             </div>
                         </div>
-                        <button className="button" type="submit">Update Course</button>
-                        <Link className="button button-secondary" to="/">Cancel</Link>
+                        <button className="button" type="submit" onClick={handleUpdate}>Update Course</button>
+                        <Link className="button button-secondary" to={"/courses/"+id}>Cancel</Link>
                     </form>
                 </div>
             </main>

@@ -93,7 +93,7 @@ export default function CreateCourse () {
                                 <textarea
                                     id="materialsNeeded"
                                     name="materialsNeeded"
-                                    placeholder="Separate items with a new line and *"
+                                    placeholder="Start new material with a *"
                                     onChange={(e) => setMaterials(e.target.value)}
                                 />
                             </div>
