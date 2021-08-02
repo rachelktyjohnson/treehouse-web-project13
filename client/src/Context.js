@@ -25,7 +25,8 @@ export function Provider(props) {
         </UserContext.Provider>
     );
 
-    function signIn (emailAddress, password) {
+    async function signIn (emailAddress, password) {
+        let user;
         const token = Buffer.from(`${emailAddress}:${password}`, 'utf8').toString('base64')
         axios.get("http://localhost:5000/api/users", {
             headers: {
@@ -38,11 +39,12 @@ export function Provider(props) {
 
                 setPassword(password);
                 Cookies.set('password', JSON.stringify(password), {expires: 1, sameSite: 'strict'})
-                return response.data;
+                user = response.data;
             })
             .catch((error) => {
                 console.log('Error fetching and parsing data', error);
             })
+        return user;
     }
 
     function signOut(history){

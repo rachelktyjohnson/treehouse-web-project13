@@ -7,10 +7,16 @@ export default function UserSignIn(props) {
     let history = useHistory();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState([]);
 
-    async function handleSubmit(e){
+    function handleSubmit(e){
         e.preventDefault();
-        await context.actions.signIn(email, password);
+        context.actions.signIn(email, password)
+            .then((user)=>{
+                if (user === undefined){
+                    setErrors('Sign-in unsuccessful. Check your credentials.');
+                }
+            })
     }
 
     useEffect(()=>{
@@ -27,7 +33,11 @@ export default function UserSignIn(props) {
         <main>
             <div className="form--centered">
                 <h2>Sign In</h2>
-
+                {errors.length > 0 ? (
+                    <div className="validation--errors">
+                        <h3>{errors}</h3>
+                    </div>
+                ) : ""}
                 <form>
                     <label htmlFor="emailAddress">Email Address</label>
                     <input id="emailAddress"
