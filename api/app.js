@@ -33,7 +33,7 @@ app.get('/', async (req, res) => {
 });
 
 
-// Add routes.
+// Add routes with the prefix of 'api'
 app.use('/api', routes);
 
 

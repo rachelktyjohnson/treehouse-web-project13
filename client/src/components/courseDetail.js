@@ -7,16 +7,23 @@ import Loading from './loading';
 
 export default function CourseDetail({context}){
 
-    let {id} = useParams();
+    //allow the use of history
     let history = useHistory();
+
+    //grab the ID from URL params
+    let {id} = useParams();
+
+    //set state using hook
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isUser, setIsUser] = useState(false);
 
+    //this will handle deleting a course
     function handleDelete(e){
         setIsLoading(true);
         e.preventDefault();const token = Buffer.from(`${context.authenticatedUser.emailAddress}:${context.password}`, 'utf8').toString('base64')
 
+        //makes the call with basic auth
         axios.delete(`http://localhost:5000/api/courses/${id}`,{
             headers: {
                 'Authorization': `Basic ${token}`
@@ -24,6 +31,7 @@ export default function CourseDetail({context}){
             .then( () => {
                 setIsLoading(false)
                 history.push('/');
+                //redirects to main page
             } )
             .catch(error => {
                 console.log('Error fetching and parsing data', error);
@@ -36,14 +44,19 @@ export default function CourseDetail({context}){
 
     }
 
+    //this happens at least once after load, when the dependencies change
     useEffect(()=>{
+        //get the course details from the api
         axios.get(`http://localhost:5000/api/courses/${id}`)
             .then(response => {
                 if (response.data == null){
+                    //if nothing is found, redirect to 404
                     history.push('/notfound');
                 }
                 setData(response.data);
+                //if logged in
                 if (context.authenticatedUser !== null){
+                    //if the current user doesn't match the course creator, set the state
                     setIsUser(response.data.userId === context.authenticatedUser.id)
                 }
 

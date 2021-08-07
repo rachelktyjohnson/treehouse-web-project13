@@ -4,6 +4,7 @@ import { Consumer } from './Context';
 
 export default function PrivateRoute ({ component: Component, ...rest }){
     return (
+        //This wraps the component with the requirement that a request must come with authentication
         <Consumer>
             {context => (
                 <Route

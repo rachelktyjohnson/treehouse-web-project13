@@ -6,8 +6,10 @@ import Loading from './loading';
 
 export default function CreateCourse ({context}) {
 
+    //allow use of history
     let history = useHistory();
 
+    //set state using hooks
     const [errors, setErrors] = useState([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -16,12 +18,12 @@ export default function CreateCourse ({context}) {
     const [isLoading, setIsLoading] = useState(false);
 
 
-
-
+    //when the form is submitted
     function handleSubmit(e){
         setIsLoading(true);
         e.preventDefault();
         const token = Buffer.from(`${context.authenticatedUser.emailAddress}:${context.password}`, 'utf8').toString('base64')
+        //make request to api using basic auth and form data
         axios.post(`http://localhost:5000/api/courses`,{
             title: title,
             description: description,
@@ -35,6 +37,7 @@ export default function CreateCourse ({context}) {
         })
             .then((response) => {
                 setIsLoading(false);
+                //redirect to the course page
                 history.push(response.headers.location);
             })
             .catch(error => {

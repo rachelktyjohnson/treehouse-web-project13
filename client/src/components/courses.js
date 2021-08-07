@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 
 export default function Courses() {
-
+        //sets state using hooks
         const [data, setData] = useState([]);
+
+        //grab the data from the api
         useEffect(()=>{
             axios.get('http://localhost:5000/api/courses')
                 .then(response => {

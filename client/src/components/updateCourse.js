@@ -5,8 +5,13 @@ import Loading from './loading';
 
 export default function UpdateCourse({context}) {
 
+    //grab ID from parameters
     let {id} = useParams();
+
+    //enable use of history
     let history = useHistory();
+
+    //set state using hooks
     const [errors, setErrors] = useState([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -14,10 +19,12 @@ export default function UpdateCourse({context}) {
     const [materials, setMaterials] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
+    //runs when the form is submitted
     function handleUpdate(e){
         setIsLoading(true);
         e.preventDefault();
         const token = Buffer.from(`${context.authenticatedUser.emailAddress}:${context.password}`, 'utf8').toString('base64')
+        //makes request to api with user auth and form datas
         axios.put(`http://localhost:5000/api/courses/${id}`,{
             title: title,
             description: description,
@@ -46,6 +53,7 @@ export default function UpdateCourse({context}) {
     }
 
 
+    //makes call to api to retrieve course details so it can be edited
     useEffect(()=>{
         axios.get(`http://localhost:5000/api/courses/${id}`)
             .then(response => {

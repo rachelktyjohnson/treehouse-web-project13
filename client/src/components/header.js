@@ -8,7 +8,7 @@ export default function Header({context}) {
             <div className="wrap header--flex">
                 <h1 className="header--logo"><Link to="/">Courses</Link></h1>
                 <nav>
-
+                    {/* show different nav items depending on signed in or not. based on context */}
                     {context.authenticatedUser ? (
                         <ul className="header--signedin">
                             <li>Welcome, {context.authenticatedUser.firstName} {context.authenticatedUser.lastName}!</li>

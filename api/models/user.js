@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 module.exports = (sequelize) => {
     class User extends Model{}
 
+    //User schema
     User.init({
         firstName: {
             type: DataTypes.STRING,
@@ -61,6 +62,7 @@ module.exports = (sequelize) => {
         }
     }, {sequelize})
 
+    //before the User is created, hash the password
     User.beforeCreate((user, options)=>{
         return bcrypt.hash(user.password, 10)
             .then(hash => {
@@ -71,6 +73,8 @@ module.exports = (sequelize) => {
             })
     })
 
+    //hook it up with Course.
+    //A User has many Courses
     User.associate = (models) => {
         User.hasMany(models.Course, {
             as: 'teacher',

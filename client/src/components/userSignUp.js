@@ -13,6 +13,7 @@ export default function UserSignUp(props) {
         history.push('/');
     }
 
+    //set state using hooks
     const [errors, setErrors] = useState([]);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -20,9 +21,11 @@ export default function UserSignUp(props) {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    //runs when the form is submitted
     function handleSubmit(e){
         setIsLoading(true);
         e.preventDefault()
+        //makes post call to api to create the new user
         axios.post('http://localhost:5000/api/users', {
             firstName: firstName,
             lastName: lastName,

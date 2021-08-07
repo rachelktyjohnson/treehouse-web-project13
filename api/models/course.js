@@ -3,6 +3,7 @@ const {Model, DataTypes} = require('sequelize');
 module.exports = (sequelize) => {
     class Course extends Model{}
 
+    //create the course structure!
     Course.init({
         title: {
             type: DataTypes.STRING,
@@ -32,6 +33,9 @@ module.exports = (sequelize) => {
         materialsNeeded: DataTypes.STRING
     }, {sequelize})
 
+    //this links Course up to Person
+    //a Course belongs to a Person
+    //and it matches up at userId
     Course.associate = (models) => {
         Course.belongsTo(models.User, {
             as: 'teacher',

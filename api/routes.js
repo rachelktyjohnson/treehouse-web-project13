@@ -7,6 +7,7 @@ const {authenticateUser} = require("./middleware/auth-user");
 
 ////////////////////// USER ROUTES //////////////////////
 
+//GET the current user and returns a full Object including courses. Must come with AUth.
 router.get('/users', authenticateUser, asyncHandler( async (req, res)=>{
     const user = req.currentUser;
 
@@ -19,6 +20,7 @@ router.get('/users', authenticateUser, asyncHandler( async (req, res)=>{
     });
 }))
 
+//CREATE a new User. Will make sure the email doesn't already exist.
 router.post('/users', asyncHandler( async (req,res) => {
     try{
         await User.create(req.body);
@@ -37,6 +39,7 @@ router.post('/users', asyncHandler( async (req,res) => {
 
 ////////////////////// COURSE ROUTES //////////////////////
 
+//GET a list of all Courses, excluding the 2 time fields, including the teacher that the course belongs to.
 router.get('/courses', asyncHandler(async(req,res)=>{
     let courses = await Course.findAll({
         include:[
@@ -53,6 +56,7 @@ router.get('/courses', asyncHandler(async(req,res)=>{
     res.status(200).json(courses);
 }))
 
+//GET a single, particular course by ID. Excludes 2 time fields. Includes teacher/User
 router.get('/courses/:id', asyncHandler(async(req,res)=>{
     let course = await Course.findByPk(req.params.id, {
         include: [
@@ -69,6 +73,7 @@ router.get('/courses/:id', asyncHandler(async(req,res)=>{
     res.status(200).json(course);
 }))
 
+//CREATE a course. Must be Authenticated/logged in
 router.post('/courses', authenticateUser, asyncHandler(async (req,res)=> {
     try{
         let course = await Course.create(req.body);
@@ -85,6 +90,7 @@ router.post('/courses', authenticateUser, asyncHandler(async (req,res)=> {
     }
 }))
 
+//UPDATES a course. Must be authenticated/logged in
 router.put('/courses/:id', authenticateUser, asyncHandler( async (req,res) => {
     let course = await Course.findByPk(req.params.id);
     const user = req.currentUser;
@@ -108,7 +114,7 @@ router.put('/courses/:id', authenticateUser, asyncHandler( async (req,res) => {
 
 }))
 
-//TODO: put authenticateUser back in
+//DELETE a course by ID. Must be authenticated/logged-in
 router.delete('/courses/:id', authenticateUser, asyncHandler(async (req,res,)=>{
     let course = await Course.findByPk(req.params.id);
     const user = req.currentUser;

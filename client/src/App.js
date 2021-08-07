@@ -18,7 +18,9 @@ import UnhandledError from "./components/unhandledError";
 import withContext from './Context';
 import PrivateRoute from './PrivateRoute';
 
+{/* This gives the Header context, giving it access to the user auth methods and state */}
 const HeaderWithContext = withContext(Header);
+{/* withContext gives enclosing components access to the Context, including user auth methods and state */}
 
 function App() {
 
@@ -28,6 +30,7 @@ function App() {
                 <HeaderWithContext/>
                 <Switch>
                     <Route exact path="/" component={withContext(Courses)} />
+                    {/* Private routes are protected by User Auth, so it will redirect unless authenticated */}
                     <PrivateRoute exact path="/courses/create" component={withContext(CreateCourse)} />
                     <PrivateRoute exact path="/courses/:id/update" component={withContext(UpdateCourse)} />
                     <Route exact path="/courses/:id" component={withContext(CourseDetail)} />

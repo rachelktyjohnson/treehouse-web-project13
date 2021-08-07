@@ -4,13 +4,14 @@ import Cookies from 'js-cookie';
 
 const UserContext = React.createContext();
 
-
+//change up the Provider contents
 export function Provider(props) {
 
-
+    //state
     const [authenticatedUser, setAuthenticatedUser] = useState(JSON.parse(Cookies.get('authenticatedUser') || null));
     const [password, setPassword] = useState(Cookies.get('password') || null);
 
+    //stuff to include in any Components with Context
     const value = {
         authenticatedUser,
         password,
@@ -25,15 +26,21 @@ export function Provider(props) {
         </UserContext.Provider>
     );
 
+    //signs in the user
+    //takes email address and password parameters
     async function signIn (emailAddress, password) {
         let user;
         const token = Buffer.from(`${emailAddress}:${password}`, 'utf8').toString('base64')
+
+        //makes the call to users endpoint based on the Basic Auth scheme
         axios.get("http://localhost:5000/api/users", {
             headers: {
                 'Authorization': `Basic ${token}`
             }
         })
             .then((response) => {
+                //if it comes back fine, then set user details into state/context
+                //also set user data into Cookies so it can persist through refreshes and tab closes
                 setAuthenticatedUser(response.data);
                 Cookies.set('authenticatedUser', JSON.stringify(response.data), {expires: 1, sameSite: 'strict'})
 
@@ -47,6 +54,7 @@ export function Provider(props) {
         return user;
     }
 
+    //removes user info from state and cookies
     function signOut(history){
         setAuthenticatedUser(null);
         Cookies.remove('authenticatedUser', {sameSite: 'strict'});

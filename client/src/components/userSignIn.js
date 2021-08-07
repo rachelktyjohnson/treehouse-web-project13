@@ -9,8 +9,10 @@ export default function UserSignIn(props) {
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState([]);
 
+    //runs when the form is submitted
     function handleSubmit(e){
         e.preventDefault();
+        //reaches into the context to sign in
         context.actions.signIn(email, password)
             .then((user)=>{
                 if (user === undefined){
@@ -18,6 +20,7 @@ export default function UserSignIn(props) {
                 }
             })
     }
+
 
     useEffect(()=>{
         if (context.authenticatedUser){

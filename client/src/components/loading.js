@@ -1,4 +1,5 @@
 export default function Loading() {
+    //this is just a visual component that shows 'loading' while calls are made
     return (
         <main>
             <div className="wrap">
