@@ -33,8 +33,12 @@ export default function UserSignUp(props) {
             password: password
         })
             .then((response)=>{
-                setIsLoading(false);
-                history.push('/');
+                context.actions.signIn(email, password)
+                    .then(()=>{
+                        history.push('/');
+                        setIsLoading(false);
+                    })
+
             })
             .catch(error => {
                 setIsLoading(false);
