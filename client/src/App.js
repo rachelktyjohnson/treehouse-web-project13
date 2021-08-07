@@ -18,9 +18,9 @@ import UnhandledError from "./components/unhandledError";
 import withContext from './Context';
 import PrivateRoute from './PrivateRoute';
 
-{/* This gives the Header context, giving it access to the user auth methods and state */}
+// This gives the Header context, giving it access to the user auth methods and state
 const HeaderWithContext = withContext(Header);
-{/* withContext gives enclosing components access to the Context, including user auth methods and state */}
+// withContext gives enclosing components access to the Context, including user auth methods and state
 
 function App() {
 

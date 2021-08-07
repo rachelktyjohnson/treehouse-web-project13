@@ -38,7 +38,14 @@ export default function UserSignUp(props) {
                         history.push('/');
                         setIsLoading(false);
                     })
-
+                    .catch(error => {
+                        console.log('Error fetching and parsing data', error)
+                        if (error.response.status===401){
+                            history.push('/forbidden');
+                        } else if (error.response.status===500){
+                            history.push('/error');
+                        }
+                    })
             })
             .catch(error => {
                 setIsLoading(false);

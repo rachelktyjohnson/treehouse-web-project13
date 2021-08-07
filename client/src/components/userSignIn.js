@@ -14,13 +14,17 @@ export default function UserSignIn(props) {
         e.preventDefault();
         //reaches into the context to sign in
         context.actions.signIn(email, password)
-            .then((user)=>{
-                if (user === undefined){
-                    setErrors('Sign-in unsuccessful. Check your credentials.');
+            .then(()=>{
+                if (props.location.state){
+                    history.push(props.location.state.from.pathname);
+                } else {
+                    history.push('/');
                 }
             })
+            .catch(() => {
+                setErrors('Sign-in unsuccessful. Check your credentials.');
+            })
     }
-
 
     useEffect(()=>{
         if (context.authenticatedUser){

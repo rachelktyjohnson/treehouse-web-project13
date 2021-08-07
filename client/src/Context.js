@@ -29,7 +29,6 @@ export function Provider(props) {
     //signs in the user
     //takes email address and password parameters
     async function signIn (emailAddress, password) {
-        let user;
         const token = Buffer.from(`${emailAddress}:${password}`, 'utf8').toString('base64')
 
         //makes the call to users endpoint based on the Basic Auth scheme
@@ -46,12 +45,12 @@ export function Provider(props) {
 
                 setPassword(password);
                 Cookies.set('password', JSON.stringify(password), {expires: 1, sameSite: 'strict'})
-                user = response.data;
+                return response.data;
             })
             .catch((error) => {
                 console.log('Error fetching and parsing data', error);
             })
-        return user;
+
     }
 
     //removes user info from state and cookies

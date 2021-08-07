@@ -41,19 +41,26 @@ router.post('/users', asyncHandler( async (req,res) => {
 
 //GET a list of all Courses, excluding the 2 time fields, including the teacher that the course belongs to.
 router.get('/courses', asyncHandler(async(req,res)=>{
-    let courses = await Course.findAll({
-        include:[
-            {
-                model: User,
-                as: 'teacher',
-                attributes: ['firstName', 'lastName', 'emailAddress']
+    try{
+        let courses = await Course.findAll({
+            include:[
+                {
+                    model: User,
+                    as: 'teacher',
+                    attributes: ['firstName', 'lastName', 'emailAddress']
+                }
+            ],
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
             }
-        ],
-        attributes: {
-            exclude: ['createdAt', 'updatedAt']
-        }
-    });
-    res.status(200).json(courses);
+        });
+        res.status(200).json(courses);
+    } catch (error) {
+        throw error;
+    }
+
+
+
 }))
 
 //GET a single, particular course by ID. Excludes 2 time fields. Includes teacher/User
