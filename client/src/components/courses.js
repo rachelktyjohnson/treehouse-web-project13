@@ -17,10 +17,12 @@ export default function Courses() {
             })
             .catch( error => {
                 console.log('Error fetching and parsing data', error)
-                if (error.response.status===401){
-                    history.push('/forbidden');
-                } else if (error.response.status===500){
-                    history.push('/error');
+                if (error.response){
+                    if (error.response.status===401){
+                        history.push('/forbidden');
+                    } else if (error.response.status===500){
+                        history.push('/error');
+                    }
                 }
             })
 

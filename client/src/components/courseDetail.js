@@ -35,11 +35,14 @@ export default function CourseDetail({context}){
             } )
             .catch(error => {
                 console.log('Error fetching and parsing data', error);
-                if (error.response.status===401){
-                    history.push('/forbidden');
-                } else if (error.response.status===500){
-                    history.push('/error');
+                if (error.response){
+                    if (error.response.status===401){
+                        history.push('/forbidden');
+                    } else if (error.response.status===500){
+                        history.push('/error');
+                    }
                 }
+
             })
 
     }
@@ -52,24 +55,28 @@ export default function CourseDetail({context}){
                 if (response.data == null){
                     //if nothing is found, redirect to 404
                     history.push('/notfound');
-                }
-                setData(response.data);
-                //if logged in
-                if (context.authenticatedUser !== null){
-                    //if the current user doesn't match the course creator, set the state
-                    setIsUser(response.data.userId === context.authenticatedUser.id)
+                } else {
+                    setData(response.data);
+                    //if logged in
+                    if (context.authenticatedUser !== null){
+                        //if the current user doesn't match the course creator, set the state
+                        setIsUser(response.data.userId === context.authenticatedUser.id)
+                    }
+                    setIsLoading(false);
                 }
 
             })
             .catch(error => {
+                setIsLoading(false);
                 console.log('Error fetching and parsing data', error)
-                if (error.response.status===401){
-                    history.push('/forbidden');
-                } else if (error.response.status===500){
-                    history.push('/error');
+                if (error.response){
+                    if (error.response.status===401){
+                        history.push('/forbidden');
+                    } else if (error.response.status===500){
+                        history.push('/error');
+                    }
                 }
             })
-            .finally(()=>setIsLoading(false));
     }, [id, history, context.authenticatedUser])
 
     if (isLoading){
